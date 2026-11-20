@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>중둔근 · 햄스트링 · 코어 보강운동 트래커</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts: Inter & Pretendard -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-200 min-h-screen pb-14">
+
+  <!-- Main Mobile-First Container -->
+  <div class="max-w-lg mx-auto px-4 pt-4 space-y-4">
+
+    <!-- =================================================================== -->
+    <!-- Top App Header & Navigation Tabs                                    -->
+    <!-- =================================================================== -->
+    <header class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3.5">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <div class="flex items-center flex-wrap gap-1.5 mb-1.5">
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/25 text-emerald-400 text-[11px] font-bold">
+              헬스장 60분 · 주 3회
+            </span>
+            <span id="headerSyncBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-[11px] font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+              <span>로컬 저장 모드</span>
+            </span>
+          </div>
+          <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white leading-snug">
+            중둔근 · 햄스트링 · 코어 보강운동
+          </h1>
+        </div>
+
+        <!-- Settings Modal Trigger (Gear Icon) -->
+        <button
+          id="openSettingsBtn"
+          type="button"
+          class="shrink-0 p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 transition"
+          aria-label="구글 시트 연동 설정"
+          title="구글 시트 연동 설정"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="grid grid-cols-2 gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800/80" aria-label="메인 탭">
+        <button
+          id="tabBtnToday"
+          type="button"
+          class="py-2.5 px-3 rounded-lg text-sm font-bold transition flex items-center justify-center gap-1.5 bg-emerald-500 text-slate-950 shadow-sm"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          <span>오늘의 운동</span>
+        </button>
+        <button
+          id="tabBtnHistory"
+          type="button"
+          class="py-2.5 px-3 rounded-lg text-sm font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>운동 기록</span>
+          <span id="historyCountPill" class="px-1.5 py-0.5 rounded-md text-[11px] font-extrabold bg-slate-800 text-slate-300 tabular-nums">0</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- =================================================================== -->
+    <!-- TAB 1: 오늘의 운동 (Today's Workout)                                 -->
+    <!-- =================================================================== -->
+    <main id="tabToday" class="space-y-4">
+
+      <!-- Sticky Top Bar: Progress + Compact Rest Timer + Reset -->
+      <section
+        id="stickyBar"
+        class="sticky top-2 z-30 bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl p-3.5 shadow-xl space-y-3 transition-colors duration-300"
+      >
+        <!-- Progress Row -->
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between text-xs mb-1.5">
+              <span class="font-semibold text-slate-400">세트 진행률</span>
+              <div class="flex items-center gap-1.5 tabular-nums">
+                <span id="progressCount" class="font-extrabold text-emerald-400">0 / 21 세트</span>
+                <span id="progressPercent" class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-200 font-bold text-[11px]">0%</span>
+              </div>
+            </div>
+            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden p-0.5">
+              <div
+                id="progressBar"
+                class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+
+          <button
+            id="openResetModalBtn"
+            type="button"
+            class="shrink-0 px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 hover:text-white text-xs font-bold border border-slate-700 transition"
+            title="체크 및 기록 초기화"
+          >
+            초기화
+          </button>
+        </div>
+
+        <!-- Compact Rest Timer Row -->
+        <div class="pt-2.5 border-t border-slate-800/90 space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <div id="timerIconWrap" class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 shrink-0 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[11px] font-semibold text-slate-400">휴식 타이머</span>
+                  <span id="timerDoneBadge" class="hidden px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300">완료!</span>
+                </div>
+                <div id="timerDisplay" class="text-2xl font-extrabold tabular-nums tracking-tight text-white leading-none">
+                  01:00
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <button
+                id="timerToggleBtn"
+                type="button"
+                class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-extrabold text-xs sm:text-sm transition flex items-center gap-1 shadow-md shadow-emerald-500/20"
+              >
+                <svg id="timerPlayIcon" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                <svg id="timerPauseIcon" class="w-3.5 h-3.5 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></svg>
+                <span id="timerToggleText">시작</span>
+              </button>
+
+              <button
+                id="timerResetBtn"
+                type="button"
+                class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 border border-slate-700 transition"
+                aria-label="타이머 리셋"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
+
+              <button
+                id="soundToggleBtn"
+                type="button"
+                class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-emerald-400 border border-slate-700 transition"
+                aria-label="알림음 켜기/끄기"
+                title="알림음 켜짐"
+              >
+                <svg id="soundOnIcon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z" />
+                </svg>
+                <svg id="soundOffIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick-Start Presets -->
+          <div class="grid grid-cols-4 gap-1.5">
+            <button type="button" data-seconds="30" class="preset-btn py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 active:scale-95 transition">30초</button>
+            <button type="button" data-seconds="45" class="preset-btn py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 active:scale-95 transition">45초</button>
+            <button type="button" data-seconds="60" class="preset-btn py-1.5 rounded-xl text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/50 active:scale-95 transition">60초</button>
+            <button type="button" data-seconds="90" class="preset-btn py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 active:scale-95 transition">90초</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1. 워밍업 (5~7분) -->
+      <section class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-md">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+            <h2 class="text-base font-bold text-white">1. 워밍업 (5~7분)</h2>
+          </div>
+          <span id="warmupBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 tabular-nums">0 / 2</span>
+        </div>
+        <div id="warmupList" class="space-y-2"></div>
+      </section>
+
+      <!-- 2. 메인 운동 6종 -->
+      <section class="space-y-3.5">
+        <div class="flex items-center justify-between px-1">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+            <h2 class="text-base font-bold text-white">2. 메인 운동 6종 (약 45분)</h2>
+          </div>
+          <span class="text-xs text-slate-400">휴식 알약 터치 시 타이머 시작</span>
+        </div>
+        <div id="exerciseList" class="space-y-3.5"></div>
+      </section>
+
+      <!-- 3. 쿨다운 (5~8분) -->
+      <section class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-md">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+          <h2 class="text-base font-bold text-white">3. 쿨다운 (5~8분)</h2>
+        </div>
+        <label
+          id="cooldownLabel"
+          class="flex items-center gap-3 p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 cursor-pointer hover:border-slate-700 transition select-none"
+        >
+          <input id="cooldownCheck" type="checkbox" class="w-5 h-5 rounded-md accent-emerald-500 cursor-pointer shrink-0" />
+          <span class="text-sm font-bold text-slate-100">하체 및 고관절 스트레칭 완료</span>
+        </label>
+      </section>
+
+      <!-- 4. Bottom Action Section: Date, Overall Memo & Save Button -->
+      <section class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-5 shadow-lg space-y-4">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+            <h2 class="text-base font-bold text-white">오늘의 운동 마무리</h2>
+          </div>
+          <input
+            id="workoutDateInput"
+            type="date"
+            class="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 focus:border-emerald-500 focus:outline-none text-xs sm:text-sm font-bold text-slate-100 tabular-nums"
+            aria-label="운동 날짜 선택"
+          />
+        </div>
+
+        <div>
+          <label for="overallMemoInput" class="block text-xs font-semibold text-slate-400 mb-1.5">
+            오늘의 컨디션 및 총평
+          </label>
+          <textarea
+            id="overallMemoInput"
+            rows="2"
+            placeholder="예: 중둔근 자극이 확실히 느껴짐. 다음 주 원레그 RDL 2kg 증량 도전!"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:outline-none text-sm text-white placeholder-slate-500 resize-none transition"
+          ></textarea>
+        </div>
+
+        <button
+          id="saveWorkoutBtn"
+          type="button"
+          class="w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 active:scale-[0.99] text-slate-950 font-extrabold text-base shadow-lg shadow-emerald-500/25 transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <svg id="saveBtnIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <svg id="saveBtnSpinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+          </svg>
+          <span id="saveBtnText">운동 완료 및 기록 저장</span>
+        </button>
+
+        <p id="saveModeHint" class="text-center text-xs text-slate-400">
+          로컬에 자동 저장되며, 구글 시트 연동 시 시트에도 영구 기록됩니다.
+        </p>
+      </section>
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- TAB 2: 운동 기록 (History)                                           -->
+    <!-- =================================================================== -->
+    <main id="tabHistory" class="hidden space-y-4">
+
+      <!-- Summary Stats -->
+      <section class="grid grid-cols-2 gap-3">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-md">
+          <div class="text-xs font-semibold text-slate-400">총 운동 일수</div>
+          <div class="mt-1 flex items-baseline gap-1">
+            <span id="statTotalDays" class="text-3xl font-extrabold text-emerald-400 tabular-nums">0</span>
+            <span class="text-xs font-bold text-slate-400">일</span>
+          </div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-md">
+          <div class="text-xs font-semibold text-slate-400">이번 달 운동 횟수</div>
+          <div class="mt-1 flex items-baseline gap-1">
+            <span id="statMonthCount" class="text-3xl font-extrabold text-sky-400 tabular-nums">0</span>
+            <span class="text-xs font-bold text-slate-400">회</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- History Actions Toolbar -->
+      <section class="flex items-center gap-2">
+        <button
+          id="syncFromSheetBtn"
+          type="button"
+          class="flex-1 py-3 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-sky-300 border border-sky-500/30 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 disabled:opacity-60"
+        >
+          <svg id="syncIcon" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span id="syncBtnText">구글 시트에서 새로고침</span>
+        </button>
+
+        <button
+          id="exportJsonBtn"
+          type="button"
+          class="shrink-0 py-3 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-slate-200 border border-slate-700 font-bold text-xs sm:text-sm transition flex items-center gap-1.5"
+          title="운동 기록 JSON 파일 백업"
+        >
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          <span>JSON 백업</span>
+        </button>
+      </section>
+
+      <!-- History Accordion List -->
+      <section id="historyList" class="space-y-3"></section>
+    </main>
+
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- Toast Notification                                                  -->
+  <!-- =================================================================== -->
+  <div
+    id="toast"
+    class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] px-4 py-3 rounded-xl bg-emerald-500 text-slate-950 font-bold text-sm shadow-2xl flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300 translate-y-3"
+    role="status"
+    aria-live="polite"
+  >
+    <span id="toastMessage" class="truncate">알림</span>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- Modal 1: Reset Options                                              -->
+  <!-- =================================================================== -->
+  <div
+    id="resetModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl space-y-4">
+      <div>
+        <h3 class="text-lg font-extrabold text-white">운동 체크 초기화</h3>
+        <p class="text-sm text-slate-400 mt-1">
+          원하는 초기화 방식을 선택하세요. 저장된 과거 기록(운동 기록 탭)은 삭제되지 않습니다.
+        </p>
+      </div>
+      <div class="space-y-2">
+        <button
+          id="resetChecksOnlyBtn"
+          type="button"
+          class="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-[0.99] text-slate-950 font-extrabold text-sm transition"
+        >
+          완료 체크만 초기화 (중량·메모 유지)
+        </button>
+        <button
+          id="resetAllBtn"
+          type="button"
+          class="w-full py-3 px-4 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 active:scale-[0.99] text-rose-400 border border-rose-500/30 font-bold text-sm transition"
+        >
+          전체 초기화 (중량·메모 포함)
+        </button>
+        <button
+          id="closeResetModalBtn"
+          type="button"
+          class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-sm transition"
+        >
+          취소
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- Modal 2: Post-Save Clear Checkmarks Prompt                          -->
+  <!-- =================================================================== -->
+  <div
+    id="postSaveModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="w-full max-w-sm bg-slate-900 border border-emerald-500/40 rounded-2xl p-5 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-base font-extrabold text-white">운동 기록이 저장되었습니다!</h3>
+          <p id="postSaveSubtext" class="text-xs text-slate-400 mt-0.5">다음 운동을 위해 체크 표시만 비워둘까요?</p>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <button
+          id="postSaveClearChecksBtn"
+          type="button"
+          class="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm transition"
+        >
+          체크만 초기화 (중량·메모 유지)
+        </button>
+        <button
+          id="postSaveGoHistoryBtn"
+          type="button"
+          class="w-full py-2.5 px-4 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 font-bold text-sm transition"
+        >
+          운동 기록 탭에서 확인하기
+        </button>
+        <button
+          id="postSaveKeepBtn"
+          type="button"
+          class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-sm transition"
+        >
+          현재 화면 그대로 두기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- Modal 3: Google Sheets (Apps Script) Integration Settings           -->
+  <!-- =================================================================== -->
+  <div
+    id="settingsModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="w-full max-w-md max-h-[90vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-extrabold text-white">구글 시트 연동 설정</h3>
+        <button
+          id="closeSettingsBtn"
+          type="button"
+          class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition"
+          aria-label="닫기"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Connection Status Badge -->
+      <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
+        <span class="text-xs font-semibold text-slate-400">현재 연동 상태</span>
+        <span id="modalSyncBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+          <span>미연동 (로컬 저장 모드)</span>
+        </span>
+      </div>
+
+      <!-- Apps Script URL Input -->
+      <div class="space-y-2">
+        <label for="scriptUrlInput" class="block text-xs font-bold text-slate-300">
+          Google Apps Script 웹 앱 URL
+        </label>
+        <input
+          id="scriptUrlInput"
+          type="url"
+          placeholder="https://script.google.com/macros/s/.../exec"
+          class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 focus:border-emerald-500 focus:outline-none text-xs sm:text-sm text-white placeholder-slate-500"
+        />
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button
+            id="saveScriptUrlBtn"
+            type="button"
+            class="py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm transition"
+          >
+            URL 저장
+          </button>
+          <button
+            id="testConnectionBtn"
+            type="button"
+            class="py-2.5 px-3 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 font-bold text-xs sm:text-sm transition"
+          >
+            연결 테스트
+          </button>
+        </div>
+        <p id="testResultText" class="text-xs hidden"></p>
+      </div>
+
+      <!-- Built-in Setup Guide & Copyable Apps Script Code -->
+      <div class="pt-3 border-t border-slate-800 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-emerald-400">Apps Script 코드 (구글 시트에 붙여넣기)</span>
+          <button
+            id="copyAppsScriptBtn"
+            type="button"
+            class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-bold transition"
+          >
+            코드 복사
+          </button>
+        </div>
+        <ol class="text-[11px] text-slate-400 space-y-1 list-decimal list-inside leading-relaxed">
+          <li>새 구글 시트를 열고 상단 <strong class="text-slate-200">확장 프로그램 → Apps Script</strong> 클릭</li>
+          <li>기존 코드를 지우고 아래 코드를 복사해 붙여넣은 뒤 저장(Ctrl+S)</li>
+          <li>우측 상단 <strong class="text-slate-200">배포 → 새 배포 → 웹 앱</strong> 선택</li>
+          <li>액세스 권한을 <strong class="text-slate-200">모든 사용자</strong>로 설정 후 배포 → 생성된 URL을 위 입력칸에 붙여넣기</li>
+        </ol>
+        <textarea
+          id="appsScriptCodeBox"
+          readonly
+          rows="7"
+          class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-[11px] font-mono text-slate-300 focus:outline-none resize-none"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * =========================================================================
+     * 1. Constants & Workout Routine Definition
+     * =========================================================================
+     */
+    const STORAGE_CURRENT_KEY = 'gym_routine_current_v2';
+    const STORAGE_HISTORY_KEY = 'gym_routine_history_v2';
+    const STORAGE_SCRIPT_URL_KEY = 'gym_routine_script_url_v2';
+
+    const WARMUP_ITEMS = [
+      { id: 'w1', text: '실내 자전거/트레드밀 걷기 5분' },
+      { id: 'w2', text: '고관절 돌리기 & 맨몸 스쿼트 10회' },
+    ];
+
+    const EXERCISES = [
+      {
+        id: 'ex1',
+        order: '①',
+        name: '원레그 루마니안 데드리프트',
+        engName: 'Single-Leg RDL',
+        target: '햄스트링 + 중둔근 밸런스',
+        prescription: '4세트 × 양쪽 각 10~12회',
+        restSec: 90,
+        sets: 4,
+        tip: '골반이 옆으로 열리지 않게 정면을 유지하고, 지지하는 다리의 햄스트링이 늘어나는 느낌에 집중',
+        youtubeUrl: 'http://www.youtube.com/watch?v=YzlDoTqQgD4',
+      },
+      {
+        id: 'ex2',
+        order: '②',
+        name: '불가리안 스플릿 스쿼트',
+        engName: 'Bulgarian Split Squat',
+        target: '중둔근 + 하체 지지력',
+        prescription: '4세트 × 양쪽 각 10회',
+        restSec: 90,
+        sets: 4,
+        tip: '앞다리에 체중을 80% 이상 싣고 상체를 살짝 앞으로 기울여 엉덩이 자극 집중',
+        youtubeUrl: 'http://www.youtube.com/watch?v=7gw_sxVfQW0',
+      },
+      {
+        id: 'ex3',
+        order: '③',
+        name: '라잉 레그 컬',
+        engName: 'Lying Leg Curl',
+        target: '햄스트링 고립 강화',
+        prescription: '4세트 × 12~15회',
+        restSec: 60,
+        sets: 4,
+        tip: '골반이 뜨지 않게 고정하고, 다리를 펼 때 2~3초 천천히 버티며 내려오기',
+        youtubeUrl: 'http://www.youtube.com/watch?v=fJtfxLTyml0',
+      },
+      {
+        id: 'ex4',
+        order: '④',
+        name: '케이블 힙 어브덕션',
+        engName: 'Cable Hip Abduction',
+        target: '중둔근 집중 타겟',
+        prescription: '3세트 × 양쪽 각 15회',
+        restSec: 60,
+        sets: 3,
+        tip: '상체가 기울어지지 않게 코어를 잡고, 발끝이 바깥으로 돌아가지 않게 주의',
+        youtubeUrl: 'http://www.youtube.com/watch?v=Lqrva4OEvxQ',
+      },
+      {
+        id: 'ex5',
+        order: '⑤',
+        name: '케이블 팔로프 프레스',
+        engName: 'Cable Pallof Press',
+        target: '코어 항회전 안정성',
+        prescription: '3세트 × 양쪽 각 12회',
+        restSec: 45,
+        sets: 3,
+        tip: '몸이 케이블 쪽으로 끌려가지 않게 복부와 둔근에 힘을 주고 버티기',
+        youtubeUrl: 'http://www.youtube.com/watch?v=yUAfmct4sh8',
+      },
+      {
+        id: 'ex6',
+        order: '⑥',
+        name: '사이드 플랭크',
+        engName: 'Side Plank',
+        target: '측면 코어 + 중둔근',
+        prescription: '3세트 × 양쪽 각 30~45초',
+        restSec: 45,
+        sets: 3,
+        tip: '머리부터 발끝까지 일직선 유지, 아래쪽 옆구리와 엉덩이 힘으로 골반 밀어 올리기',
+        youtubeUrl: 'http://www.youtube.com/watch?v=aOD1K58sB3k',
+      },
+    ];
+
+    const TOTAL_SETS = EXERCISES.reduce((acc, ex) => acc + ex.sets, 0); // 21 sets
+
+    // Google Apps Script template displayed in Settings modal
+    const APPS_SCRIPT_TEMPLATE = `const SHEET_NAME = 'WorkoutLogs';
+
+function getOrCreateSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME);
+    sheet.appendRow([
+      'date', 'timestamp', 'completedSets', 'totalSets',
+      'warmupDone', 'cooldownDone', 'overallMemo', 'exercisesJson'
+    ]);
+  }
+  return sheet;
+}
+
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const sheet = getOrCreateSheet();
+    sheet.appendRow([
+      data.date || '',
+      data.timestamp || '',
+      Number(data.completedSets || 0),
+      Number(data.totalSets || 21),
+      Boolean(data.warmupDone),
+      Boolean(data.cooldownDone),
+      data.overallMemo || '',
+      JSON.stringify(data.exercises || [])
+    ]);
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'success' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet() {
+  try {
+    const sheet = getOrCreateSheet();
+    const rows = sheet.getDataRange().getValues();
+    const result = [];
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r[0] && !r[1]) continue;
+      let exercises = [];
+      try { exercises = JSON.parse(r[7] || '[]'); } catch (_) {}
+      const dateStr = r[0] instanceof Date
+        ? Utilities.formatDate(r[0], Session.getScriptTimeZone(), 'yyyy-MM-dd')
+        : String(r[0]);
+      result.push({
+        date: dateStr,
+        timestamp: String(r[1] || ''),
+        completedSets: Number(r[2] || 0),
+        totalSets: Number(r[3] || 21),
+        warmupDone: Boolean(r[4]),
+        cooldownDone: Boolean(r[5]),
+        overallMemo: String(r[6] || ''),
+        exercises: exercises
+      });
+    }
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'success', data: result }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}`;
+
+    /**
+     * =========================================================================
+     * 2. Date & Utility Helpers
+     * =========================================================================
+     */
+    function getTodayDateString() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function getCurrentTimestamp() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      return `${y}-${m}-${day} ${hh}:${mm}`;
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    let toastTimer = null;
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const msgEl = document.getElementById('toastMessage');
+      msgEl.textContent = message;
+
+      toast.classList.remove('bg-emerald-500', 'text-slate-950', 'bg-rose-500', 'text-white', 'bg-sky-400');
+      if (type === 'error') {
+        toast.classList.add('bg-rose-500', 'text-white');
+      } else if (type === 'info') {
+        toast.classList.add('bg-sky-400', 'text-slate-950');
+      } else {
+        toast.classList.add('bg-emerald-500', 'text-slate-950');
+      }
+
+      toast.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2800);
+    }
+
+    /**
+     * =========================================================================
+     * 3. State Management (Current Session, History, Script URL)
+     * =========================================================================
+     */
+    function createDefaultCurrentState() {
+      const sets = {};
+      const logs = {};
+      EXERCISES.forEach((ex) => {
+        sets[ex.id] = Array(ex.sets).fill(false);
+        logs[ex.id] = { weight: '', memo: '' };
+      });
+      return {
+        warmup: { w1: false, w2: false },
+        sets,
+        logs,
+        cooldown: false,
+        overallMemo: '',
+        date: getTodayDateString(),
+      };
+    }
+
+    function loadCurrentState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_CURRENT_KEY);
+        const fallback = createDefaultCurrentState();
+        if (!raw) return fallback;
+        const parsed = JSON.parse(raw);
+        return {
+          warmup: { ...fallback.warmup, ...(parsed.warmup || {}) },
+          sets: { ...fallback.sets, ...(parsed.sets || {}) },
+          logs: { ...fallback.logs, ...(parsed.logs || {}) },
+          cooldown: Boolean(parsed.cooldown),
+          overallMemo: String(parsed.overallMemo || ''),
+          date: parsed.date || getTodayDateString(),
+        };
+      } catch (err) {
+        console.warn('Failed to load current state:', err);
+        return createDefaultCurrentState();
+      }
+    }
+
+    function saveCurrentState() {
+      try {
+        localStorage.setItem(STORAGE_CURRENT_KEY, JSON.stringify(currentState));
+      } catch (err) {
+        console.warn('Failed to save current state:', err);
+      }
+    }
+
+    function loadHistory() {
+      try {
+        const raw = localStorage.getItem(STORAGE_HISTORY_KEY);
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? sortHistoryNewestFirst(arr) : [];
+      } catch (err) {
+        console.warn('Failed to load history:', err);
+        return [];
+      }
+    }
+
+    function saveHistory() {
+      try {
+        localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(historyLogs));
+      } catch (err) {
+        console.warn('Failed to save history:', err);
+      }
+    }
+
+    function sortHistoryNewestFirst(list) {
+      return [...list].sort((a, b) => {
+        const keyA = `${a.date || ''} ${a.timestamp || ''}`;
+        const keyB = `${b.date || ''} ${b.timestamp || ''}`;
+        return keyB.localeCompare(keyA);
+      });
+    }
+
+    function loadScriptUrl() {
+      try {
+        return (localStorage.getItem(STORAGE_SCRIPT_URL_KEY) || '').trim();
+      } catch (_) {
+        return '';
+      }
+    }
+
+    function saveScriptUrl(url) {
+      scriptUrl = url.trim();
+      try {
+        localStorage.setItem(STORAGE_SCRIPT_URL_KEY, scriptUrl);
+      } catch (_) {}
+      updateConnectionStatusUI();
+    }
+
+    let currentState = loadCurrentState();
+    let historyLogs = loadHistory();
+    let scriptUrl = loadScriptUrl();
+    let expandedHistoryIndex = 0;
+
+    /**
+     * =========================================================================
+     * 4. Web Audio API Beep & Rest Timer Logic
+     * =========================================================================
+     */
+    let audioCtx = null;
+    let soundEnabled = true;
+    let timerPreset = 60;
+    let timerRemaining = 60;
+    let timerInterval = null;
+    let timerRunning = false;
+
+    const stickyBar = document.getElementById('stickyBar');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timerToggleBtn = document.getElementById('timerToggleBtn');
+    const timerToggleText = document.getElementById('timerToggleText');
+    const timerPlayIcon = document.getElementById('timerPlayIcon');
+    const timerPauseIcon = document.getElementById('timerPauseIcon');
+    const timerResetBtn = document.getElementById('timerResetBtn');
+    const timerDoneBadge = document.getElementById('timerDoneBadge');
+    const timerIconWrap = document.getElementById('timerIconWrap');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundOnIcon = document.getElementById('soundOnIcon');
+    const soundOffIcon = document.getElementById('soundOffIcon');
+    const presetButtons = document.querySelectorAll('.preset-btn');
+
+    function ensureAudioContext() {
+      try {
+        if (!audioCtx) {
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          if (Ctx) audioCtx = new Ctx();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      } catch (_) {}
+    }
+
+    function playFinishBeep() {
+      if (!soundEnabled) return;
+      try {
+        ensureAudioContext();
+        if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+        const tones = [
+          { freq: 880, offset: 0, dur: 0.14 },
+          { freq: 880, offset: 0.2, dur: 0.14 },
+          { freq: 1318.5, offset: 0.4, dur: 0.32 },
+        ];
+        tones.forEach(({ freq, offset, dur }) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + offset);
+          gain.gain.setValueAtTime(0.001, now + offset);
+          gain.gain.exponentialRampToValueAtTime(0.25, now + offset + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + offset + dur);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + offset);
+          osc.stop(now + offset + dur + 0.02);
+        });
+      } catch (_) {}
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function updateTimerUI() {
+      timerDisplay.textContent = formatTime(timerRemaining);
+
+      if (timerRunning) {
+        timerToggleText.textContent = '일시정지';
+        timerPlayIcon.classList.add('hidden');
+        timerPauseIcon.classList.remove('hidden');
+        timerToggleBtn.classList.remove('bg-emerald-500', 'hover:bg-emerald-400', 'shadow-emerald-500/20');
+        timerToggleBtn.classList.add('bg-amber-400', 'hover:bg-amber-300', 'shadow-amber-400/20');
+      } else {
+        timerToggleText.textContent = timerRemaining === 0 ? '다시' : '시작';
+        timerPlayIcon.classList.remove('hidden');
+        timerPauseIcon.classList.add('hidden');
+        timerToggleBtn.classList.add('bg-emerald-500', 'hover:bg-emerald-400', 'shadow-emerald-500/20');
+        timerToggleBtn.classList.remove('bg-amber-400', 'hover:bg-amber-300', 'shadow-amber-400/20');
+      }
+
+      presetButtons.forEach((btn) => {
+        const sec = Number(btn.dataset.seconds);
+        if (sec === timerPreset) {
+          btn.classList.remove('bg-slate-800', 'text-slate-200', 'border-slate-700');
+          btn.classList.add('bg-sky-500/20', 'text-sky-300', 'border-sky-500/50');
+        } else {
+          btn.classList.add('bg-slate-800', 'text-slate-200', 'border-slate-700');
+          btn.classList.remove('bg-sky-500/20', 'text-sky-300', 'border-sky-500/50');
+        }
+      });
+    }
+
+    function clearTimerCompleteStyle() {
+      timerDoneBadge.classList.add('hidden');
+      stickyBar.classList.remove('border-emerald-500', 'ring-2', 'ring-emerald-500/40');
+      stickyBar.classList.add('border-slate-700/80');
+      timerIconWrap.classList.remove('bg-emerald-500/20', 'border-emerald-500/40', 'text-emerald-400');
+      timerIconWrap.classList.add('bg-sky-500/15', 'border-sky-500/30', 'text-sky-400');
+    }
+
+    function stopTimer() {
+      timerRunning = false;
+      clearInterval(timerInterval);
+      timerInterval = null;
+      updateTimerUI();
+    }
+
+    function startTimer() {
+      ensureAudioContext();
+      clearTimerCompleteStyle();
+      if (timerRemaining <= 0) timerRemaining = timerPreset;
+      timerRunning = true;
+      updateTimerUI();
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timerRemaining -= 1;
+        if (timerRemaining <= 0) {
+          timerRemaining = 0;
+          stopTimer();
+          timerDoneBadge.classList.remove('hidden');
+          stickyBar.classList.remove('border-slate-700/80');
+          stickyBar.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-500/40');
+          timerIconWrap.classList.remove('bg-sky-500/15', 'border-sky-500/30', 'text-sky-400');
+          timerIconWrap.classList.add('bg-emerald-500/20', 'border-emerald-500/40', 'text-emerald-400');
+          playFinishBeep();
+          if (navigator.vibrate) {
+            try { navigator.vibrate([150, 80, 150]); } catch (_) {}
+          }
+          showToast('휴식 종료! 다음 세트를 시작하세요.');
+        } else {
+          updateTimerUI();
+        }
+      }, 1000);
+    }
+
+    function setTimerPreset(seconds, autoStart = false) {
+      stopTimer();
+      clearTimerCompleteStyle();
+      timerPreset = seconds;
+      timerRemaining = seconds;
+      updateTimerUI();
+      if (autoStart) startTimer();
+    }
+
+    timerToggleBtn.addEventListener('click', () => (timerRunning ? stopTimer() : startTimer()));
+    timerResetBtn.addEventListener('click', () => setTimerPreset(timerPreset, false));
+    presetButtons.forEach((btn) => {
+      btn.addEventListener('click', () => setTimerPreset(Number(btn.dataset.seconds), true));
+    });
+    soundToggleBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundOnIcon.classList.toggle('hidden', !soundEnabled);
+      soundOffIcon.classList.toggle('hidden', soundEnabled);
+      soundToggleBtn.classList.toggle('text-emerald-400', soundEnabled);
+      soundToggleBtn.classList.toggle('text-slate-500', !soundEnabled);
+      showToast(soundEnabled ? '타이머 알림음 켜짐' : '타이머 알림음 꺼짐', 'info');
+    });
+
+    /**
+     * =========================================================================
+     * 5. Render Functions: Today's Workout Tab
+     * =========================================================================
+     */
+    function getCompletedSetsCount() {
+      return EXERCISES.reduce((sum, ex) => {
+        const arr = currentState.sets[ex.id] || [];
+        return sum + arr.filter(Boolean).length;
+      }, 0);
+    }
+
+    function updateProgressUI() {
+      const done = getCompletedSetsCount();
+      const pct = Math.round((done / TOTAL_SETS) * 100);
+      document.getElementById('progressCount').textContent = `${done} / ${TOTAL_SETS} 세트`;
+      document.getElementById('progressPercent').textContent = `${pct}%`;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function renderWarmup() {
+      const container = document.getElementById('warmupList');
+      container.innerHTML = '';
+      let done = 0;
+
+      WARMUP_ITEMS.forEach((item) => {
+        const checked = Boolean(currentState.warmup[item.id]);
+        if (checked) done += 1;
+
+        const label = document.createElement('label');
+        label.className = `flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition select-none ${
+          checked
+            ? 'bg-emerald-500/10 border-emerald-500/30 text-slate-300'
+            : 'bg-slate-950/60 border-slate-800 text-slate-100 hover:border-slate-700'
+        }`;
+        label.innerHTML = `
+          <input type="checkbox" class="w-5 h-5 rounded-md accent-emerald-500 cursor-pointer shrink-0" ${checked ? 'checked' : ''} />
+          <span class="text-sm font-medium ${checked ? 'line-through text-slate-400' : 'text-slate-100'}">${item.text}</span>
+        `;
+        label.querySelector('input').addEventListener('change', (e) => {
+          currentState.warmup[item.id] = e.target.checked;
+          saveCurrentState();
+          renderWarmup();
+        });
+        container.appendChild(label);
+      });
+
+      const badge = document.getElementById('warmupBadge');
+      badge.textContent = `${done} / ${WARMUP_ITEMS.length}`;
+      badge.className =
+        done === WARMUP_ITEMS.length
+          ? 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 tabular-nums'
+          : 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 tabular-nums';
+    }
+
+    function renderExercises() {
+      const container = document.getElementById('exerciseList');
+      container.innerHTML = '';
+
+      EXERCISES.forEach((ex) => {
+        const setArr = currentState.sets[ex.id] || Array(ex.sets).fill(false);
+        const log = currentState.logs[ex.id] || { weight: '', memo: '' };
+        const doneCount = setArr.filter(Boolean).length;
+        const isAllDone = doneCount === ex.sets;
+
+        const card = document.createElement('article');
+        card.className = `bg-slate-900 border rounded-2xl p-4 sm:p-5 shadow-md transition-colors ${
+          isAllDone ? 'border-emerald-500/50' : 'border-slate-800'
+        }`;
+
+        const setButtonsHTML = setArr
+          .map(
+            (done, idx) => `
+            <button
+              type="button"
+              data-ex-id="${ex.id}"
+              data-set-idx="${idx}"
+              class="set-btn flex-1 py-2.5 px-2 rounded-xl font-extrabold text-xs sm:text-sm border transition active:scale-95 flex items-center justify-center gap-1 ${
+                done
+                  ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-sm shadow-emerald-500/20'
+                  : 'bg-slate-950/70 text-slate-300 border-slate-700 hover:border-slate-500'
+              }"
+              aria-pressed="${done}"
+            >
+              ${done ? '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>' : ''}
+              <span>${idx + 1}세트</span>
+            </button>
+          `
+          )
+          .join('');
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2.5">
+            <div class="space-y-1">
+              <div class="flex items-center flex-wrap gap-1.5">
+                <span class="text-sm font-extrabold ${isAllDone ? 'text-emerald-400' : 'text-sky-400'}">${ex.order}</span>
+                <span class="text-xs font-medium text-slate-400">${ex.engName}</span>
+              </div>
+              <h3 class="text-base sm:text-lg font-extrabold text-white leading-snug">${ex.name}</h3>
+            </div>
+
+            <a
+              href="${ex.youtubeUrl}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 active:scale-95 text-rose-400 border border-rose-500/30 text-xs font-bold transition"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+              <span>영상</span>
+            </a>
+          </div>
+
+          <div class="mt-2.5 flex flex-wrap items-center gap-1.5">
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/15 text-sky-300 border border-sky-500/25">${ex.target}</span>
+          </div>
+
+          <div class="mt-3 flex flex-wrap items-center justify-between gap-2 px-3 py-2 rounded-xl bg-slate-950/70 border border-slate-800/80 text-xs">
+            <span class="font-bold text-slate-200">${ex.prescription}</span>
+            <button
+              type="button"
+              data-rest-sec="${ex.restSec}"
+              class="quick-rest-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 font-bold active:scale-95 transition"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>휴식 ${ex.restSec}초</span>
+            </button>
+          </div>
+
+          <p class="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+            <span class="font-extrabold text-emerald-400 mr-1">TIP</span>${ex.tip}
+          </p>
+
+          <div class="mt-3.5">
+            <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
+              <span>세트 체크</span>
+              <span class="tabular-nums font-bold ${isAllDone ? 'text-emerald-400' : 'text-slate-400'}">${doneCount} / ${ex.sets}</span>
+            </div>
+            <div class="flex items-center gap-2">${setButtonsHTML}</div>
+          </div>
+
+          <div class="mt-3.5 pt-3 border-t border-slate-800/80 grid grid-cols-12 gap-2">
+            <div class="col-span-4 relative">
+              <input
+                type="text"
+                inputmode="decimal"
+                data-weight="${ex.id}"
+                value="${escapeHtml(log.weight)}"
+                placeholder="중량"
+                class="w-full pl-3 pr-8 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:outline-none text-xs sm:text-sm text-white placeholder-slate-500 tabular-nums transition"
+                aria-label="${ex.name} 중량"
+              />
+              <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] font-bold text-slate-500 pointer-events-none">kg</span>
+            </div>
+            <div class="col-span-8">
+              <input
+                type="text"
+                data-memo="${ex.id}"
+                value="${escapeHtml(log.memo)}"
+                placeholder="운동 메모 (자극, 다음 목표 등)"
+                class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:outline-none text-xs sm:text-sm text-white placeholder-slate-500 transition"
+                aria-label="${ex.name} 메모"
+              />
+            </div>
+          </div>
+        `;
+
+        card.querySelectorAll('.set-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.exId;
+            const idx = Number(btn.dataset.setIdx);
+            currentState.sets[id][idx] = !currentState.sets[id][idx];
+            saveCurrentState();
+            renderExercises();
+            updateProgressUI();
+          });
+        });
+
+        card.querySelector('.quick-rest-btn').addEventListener('click', (e) => {
+          const sec = Number(e.currentTarget.dataset.restSec);
+          setTimerPreset(sec, true);
+          showToast(`${sec}초 휴식 타이머 시작!`, 'info');
+        });
+
+        card.querySelector(`[data-weight="${ex.id}"]`).addEventListener('input', (e) => {
+          currentState.logs[ex.id].weight = e.target.value;
+          saveCurrentState();
+        });
+
+        card.querySelector(`[data-memo="${ex.id}"]`).addEventListener('input', (e) => {
+          currentState.logs[ex.id].memo = e.target.value;
+          saveCurrentState();
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    function renderCooldownAndFooter() {
+      const check = document.getElementById('cooldownCheck');
+      const label = document.getElementById('cooldownLabel');
+      check.checked = Boolean(currentState.cooldown);
+      label.classList.toggle('bg-emerald-500/10', currentState.cooldown);
+      label.classList.toggle('border-emerald-500/30', currentState.cooldown);
+      label.classList.toggle('bg-slate-950/60', !currentState.cooldown);
+      label.classList.toggle('border-slate-800', !currentState.cooldown);
+
+      document.getElementById('workoutDateInput').value = currentState.date || getTodayDateString();
+      document.getElementById('overallMemoInput').value = currentState.overallMemo || '';
+    }
+
+    document.getElementById('cooldownCheck').addEventListener('change', (e) => {
+      currentState.cooldown = e.target.checked;
+      saveCurrentState();
+      renderCooldownAndFooter();
+    });
+
+    document.getElementById('workoutDateInput').addEventListener('change', (e) => {
+      currentState.date = e.target.value || getTodayDateString();
+      saveCurrentState();
+    });
+
+    document.getElementById('overallMemoInput').addEventListener('input', (e) => {
+      currentState.overallMemo = e.target.value;
+      saveCurrentState();
+    });
+
+    /**
+     * =========================================================================
+     * 6. Save Workout & Google Sheets POST Integration
+     * =========================================================================
+     */
+    function buildWorkoutPayload() {
+      const completedSets = getCompletedSetsCount();
+      const warmupDone = WARMUP_ITEMS.every((item) => Boolean(currentState.warmup[item.id]));
+
+      return {
+        date: currentState.date || getTodayDateString(),
+        timestamp: getCurrentTimestamp(),
+        completedSets,
+        totalSets: TOTAL_SETS,
+        warmupDone,
+        cooldownDone: Boolean(currentState.cooldown),
+        overallMemo: (currentState.overallMemo || '').trim(),
+        exercises: EXERCISES.map((ex) => {
+          const arr = currentState.sets[ex.id] || [];
+          const log = currentState.logs[ex.id] || { weight: '', memo: '' };
+          return {
+            name: ex.name,
+            setsDone: arr.filter(Boolean).length,
+            totalSets: ex.sets,
+            weight: (log.weight || '').trim(),
+            memo: (log.memo || '').trim(),
+          };
+        }),
+      };
+    }
+
+    const saveWorkoutBtn = document.getElementById('saveWorkoutBtn');
+    const saveBtnIcon = document.getElementById('saveBtnIcon');
+    const saveBtnSpinner = document.getElementById('saveBtnSpinner');
+    const saveBtnText = document.getElementById('saveBtnText');
+
+    function setSaveBtnLoading(loading) {
+      saveWorkoutBtn.disabled = loading;
+      saveBtnIcon.classList.toggle('hidden', loading);
+      saveBtnSpinner.classList.toggle('hidden', !loading);
+      saveBtnText.textContent = loading ? '구글 시트에 저장 중...' : '운동 완료 및 기록 저장';
+    }
+
+    saveWorkoutBtn.addEventListener('click', async () => {
+      const payload = buildWorkoutPayload();
+
+      // 1) Always save immediately to localStorage history
+      historyLogs = sortHistoryNewestFirst([payload, ...historyLogs]);
+      saveHistory();
+      renderHistory();
+
+      // 2) If Google Apps Script URL is configured, POST to Google Sheets
+      if (scriptUrl) {
+        setSaveBtnLoading(true);
+        try {
+          const response = await fetch(scriptUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload),
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+          const result = await response.json().catch(() => ({ status: 'success' }));
+          if (result.status === 'error') {
+            throw new Error(result.message || 'Apps Script 오류');
+          }
+          document.getElementById('postSaveSubtext').textContent =
+            '로컬 및 구글 시트에 모두 영구 저장되었습니다!';
+          showToast('구글 시트에 운동 기록이 저장되었습니다!');
+          openModal('postSaveModal');
+        } catch (err) {
+          console.error('Google Sheets POST error:', err);
+          document.getElementById('postSaveSubtext').textContent =
+            '로컬에는 저장되었으나 구글 시트 전송에 실패했습니다. 설정 URL을 확인해 주세요.';
+          showToast('구글 시트 전송 실패 (로컬 저장 완료)', 'error');
+          openModal('postSaveModal');
+        } finally {
+          setSaveBtnLoading(false);
+        }
+      } else {
+        document.getElementById('postSaveSubtext').textContent =
+          '브라우저에 저장되었습니다. (구글 시트 연동 시 클라우드에도 백업됩니다)';
+        showToast('운동 기록이 로컬에 저장되었습니다!');
+        openModal('postSaveModal');
+      }
+    });
+
+    /**
+     * =========================================================================
+     * 7. History Tab Rendering, Stats, Google Sheets GET Sync & JSON Backup
+     * =========================================================================
+     */
+    function renderHistory() {
+      document.getElementById('historyCountPill').textContent = historyLogs.length;
+
+      // Summary stats
+      const uniqueDates = new Set(historyLogs.map((h) => h.date).filter(Boolean));
+      const now = new Date();
+      const thisMonthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      const monthCount = historyLogs.filter((h) => String(h.date || '').startsWith(thisMonthPrefix)).length;
+
+      document.getElementById('statTotalDays').textContent = uniqueDates.size;
+      document.getElementById('statMonthCount').textContent = monthCount;
+
+      const listEl = document.getElementById('historyList');
+      listEl.innerHTML = '';
+
+      if (historyLogs.length === 0) {
+        listEl.innerHTML = `
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-2">
+            <div class="text-slate-400 text-sm font-bold">아직 저장된 운동 기록이 없습니다.</div>
+            <p class="text-xs text-slate-500">오늘의 운동 탭에서 운동을 마친 뒤 '운동 완료 및 기록 저장' 버튼을 눌러보세요.</p>
+          </div>
+        `;
+        return;
+      }
+
+      historyLogs.forEach((entry, idx) => {
+        const isExpanded = expandedHistoryIndex === idx;
+        const pct = entry.totalSets ? Math.round((entry.completedSets / entry.totalSets) * 100) : 0;
+        const isPerfect = entry.completedSets >= entry.totalSets;
+
+        const card = document.createElement('article');
+        card.className = 'bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-md';
+
+        const exercisesHTML = (entry.exercises || [])
+          .map(
+            (ex) => `
+            <div class="flex items-start justify-between gap-2 py-2 border-b border-slate-800/70 last:border-b-0">
+              <div class="min-w-0">
+                <div class="text-xs sm:text-sm font-bold text-slate-200 truncate">${escapeHtml(ex.name)}</div>
+                ${ex.memo ? `<div class="text-[11px] text-slate-400 mt-0.5">${escapeHtml(ex.memo)}</div>` : ''}
+              </div>
+              <div class="shrink-0 flex items-center gap-1.5 text-xs tabular-nums">
+                ${ex.weight ? `<span class="px-2 py-0.5 rounded-md bg-slate-800 text-sky-300 font-bold">${escapeHtml(ex.weight)}kg</span>` : ''}
+                <span class="px-2 py-0.5 rounded-md font-bold ${
+                  ex.setsDone >= ex.totalSets ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-300'
+                }">${ex.setsDone}/${ex.totalSets}</span>
+              </div>
+            </div>
+          `
+          )
+          .join('');
+
+        card.innerHTML = `
+          <button
+            type="button"
+            class="history-toggle w-full p-4 text-left flex items-start justify-between gap-3 hover:bg-slate-800/40 transition"
+          >
+            <div class="space-y-1.5 min-w-0 flex-1">
+              <div class="flex items-center flex-wrap gap-2">
+                <span class="text-base font-extrabold text-white tabular-nums">${escapeHtml(entry.date)}</span>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-extrabold tabular-nums ${
+                  isPerfect ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
+                }">
+                  ${entry.completedSets} / ${entry.totalSets} 세트 (${pct}%)
+                </span>
+              </div>
+              <div class="flex items-center flex-wrap gap-1.5 text-[11px] text-slate-400">
+                <span>${escapeHtml(entry.timestamp || '')}</span>
+                ${entry.warmupDone ? '<span class="px-1.5 py-0.5 rounded bg-slate-800 text-amber-300">워밍업✓</span>' : ''}
+                ${entry.cooldownDone ? '<span class="px-1.5 py-0.5 rounded bg-slate-800 text-sky-300">쿨다운✓</span>' : ''}
+              </div>
+              ${
+                entry.overallMemo
+                  ? `<p class="text-xs text-slate-300 bg-slate-950/60 border border-slate-800/80 rounded-lg px-2.5 py-1.5 line-clamp-2">${escapeHtml(entry.overallMemo)}</p>`
+                  : ''
+              }
+            </div>
+            <svg class="w-5 h-5 text-slate-400 shrink-0 mt-1 transition-transform ${isExpanded ? 'rotate-180' : ''}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <div class="${isExpanded ? 'block' : 'hidden'} px-4 pb-4 pt-1 border-t border-slate-800/80 bg-slate-950/40">
+            ${exercisesHTML || '<div class="text-xs text-slate-500 py-2">상세 운동 데이터가 없습니다.</div>'}
+          </div>
+        `;
+
+        card.querySelector('.history-toggle').addEventListener('click', () => {
+          expandedHistoryIndex = expandedHistoryIndex === idx ? -1 : idx;
+          renderHistory();
+        });
+
+        listEl.appendChild(card);
+      });
+    }
+
+    // Sync from Google Sheets (GET)
+    const syncFromSheetBtn = document.getElementById('syncFromSheetBtn');
+    const syncIcon = document.getElementById('syncIcon');
+    const syncBtnText = document.getElementById('syncBtnText');
+
+    syncFromSheetBtn.addEventListener('click', async () => {
+      if (!scriptUrl) {
+        showToast('먼저 우측 상단 ⚙️ 설정에서 구글 시트 URL을 등록해 주세요.', 'info');
+        openModal('settingsModal');
+        return;
+      }
+
+      syncFromSheetBtn.disabled = true;
+      syncIcon.classList.add('animate-spin');
+      syncBtnText.textContent = '불러오는 중...';
+
+      try {
+        const res = await fetch(scriptUrl, { method: 'GET' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        if (json.status !== 'success' || !Array.isArray(json.data)) {
+          throw new Error(json.message || '올바른 응답 형식이 아닙니다.');
+        }
+
+        // Merge remote + local records without duplicates (key: date + timestamp)
+        const map = new Map();
+        historyLogs.forEach((item) => {
+          const key = `${item.date}|${item.timestamp}`;
+          map.set(key, item);
+        });
+        json.data.forEach((item) => {
+          const key = `${item.date}|${item.timestamp}`;
+          map.set(key, item);
+        });
+
+        historyLogs = sortHistoryNewestFirst(Array.from(map.values()));
+        saveHistory();
+        expandedHistoryIndex = 0;
+        renderHistory();
+        showToast(`구글 시트에서 총 ${json.data.length}건의 기록을 동기화했습니다!`);
+      } catch (err) {
+        console.error('Sync error:', err);
+        showToast('구글 시트 불러오기 실패. URL과 배포 권한을 확인해 주세요.', 'error');
+      } finally {
+        syncFromSheetBtn.disabled = false;
+        syncIcon.classList.remove('animate-spin');
+        syncBtnText.textContent = '구글 시트에서 새로고침';
+      }
+    });
+
+    // Export History as JSON Backup
+    document.getElementById('exportJsonBtn').addEventListener('click', () => {
+      try {
+        const blob = new Blob([JSON.stringify(historyLogs, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `workout_history_${getTodayDateString()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('JSON 백업 파일이 다운로드되었습니다.');
+      } catch (err) {
+        showToast('백업 파일 생성에 실패했습니다.', 'error');
+      }
+    });
+
+    /**
+     * =========================================================================
+     * 8. Tabs, Modals & Settings Controls
+     * =========================================================================
+     */
+    const tabBtnToday = document.getElementById('tabBtnToday');
+    const tabBtnHistory = document.getElementById('tabBtnHistory');
+    const tabToday = document.getElementById('tabToday');
+    const tabHistory = document.getElementById('tabHistory');
+
+    function switchTab(tab) {
+      const isToday = tab === 'today';
+      tabToday.classList.toggle('hidden', !isToday);
+      tabHistory.classList.toggle('hidden', isToday);
+
+      if (isToday) {
+        tabBtnToday.classList.add('bg-emerald-500', 'text-slate-950', 'shadow-sm');
+        tabBtnToday.classList.remove('text-slate-400', 'hover:text-slate-200');
+        tabBtnHistory.classList.remove('bg-emerald-500', 'text-slate-950', 'shadow-sm');
+        tabBtnHistory.classList.add('text-slate-400', 'hover:text-slate-200');
+      } else {
+        tabBtnHistory.classList.add('bg-emerald-500', 'text-slate-950', 'shadow-sm');
+        tabBtnHistory.classList.remove('text-slate-400', 'hover:text-slate-200');
+        tabBtnToday.classList.remove('bg-emerald-500', 'text-slate-950', 'shadow-sm');
+        tabBtnToday.classList.add('text-slate-400', 'hover:text-slate-200');
+        renderHistory();
+      }
+    }
+
+    tabBtnToday.addEventListener('click', () => switchTab('today'));
+    tabBtnHistory.addEventListener('click', () => switchTab('history'));
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      el.classList.remove('hidden');
+      el.classList.add('flex');
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      el.classList.add('hidden');
+      el.classList.remove('flex');
+    }
+
+    // Close modals when clicking backdrop
+    ['resetModal', 'postSaveModal', 'settingsModal'].forEach((id) => {
+      document.getElementById(id).addEventListener('click', (e) => {
+        if (e.target.id === id) closeModal(id);
+      });
+    });
+
+    // Reset Modal Handlers
+    function clearCheckmarksOnly() {
+      const fresh = createDefaultCurrentState();
+      currentState.warmup = fresh.warmup;
+      currentState.sets = fresh.sets;
+      currentState.cooldown = false;
+      currentState.overallMemo = '';
+      currentState.date = getTodayDateString();
+      saveCurrentState();
+      renderTodayAll();
+    }
+
+    document.getElementById('openResetModalBtn').addEventListener('click', () => openModal('resetModal'));
+    document.getElementById('closeResetModalBtn').addEventListener('click', () => closeModal('resetModal'));
+    document.getElementById('resetChecksOnlyBtn').addEventListener('click', () => {
+      clearCheckmarksOnly();
+      closeModal('resetModal');
+      showToast('완료 체크만 초기화했습니다. (중량·메모 유지)');
+    });
+    document.getElementById('resetAllBtn').addEventListener('click', () => {
+      currentState = createDefaultCurrentState();
+      saveCurrentState();
+      renderTodayAll();
+      closeModal('resetModal');
+      showToast('모든 입력과 체크를 초기화했습니다.');
+    });
+
+    // Post-Save Modal Handlers
+    document.getElementById('postSaveClearChecksBtn').addEventListener('click', () => {
+      clearCheckmarksOnly();
+      closeModal('postSaveModal');
+      showToast('체크를 초기화했습니다. 다음 운동도 파이팅!');
+    });
+    document.getElementById('postSaveGoHistoryBtn').addEventListener('click', () => {
+      closeModal('postSaveModal');
+      switchTab('history');
+    });
+    document.getElementById('postSaveKeepBtn').addEventListener('click', () => closeModal('postSaveModal'));
+
+    // Settings Modal Handlers
+    function updateConnectionStatusUI() {
+      const connected = Boolean(scriptUrl);
+      const headerBadge = document.getElementById('headerSyncBadge');
+      const modalBadge = document.getElementById('modalSyncBadge');
+      const saveHint = document.getElementById('saveModeHint');
+
+      if (connected) {
+        headerBadge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[11px] font-bold';
+        headerBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>구글 시트 연동됨</span>';
+        modalBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        modalBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>연동됨</span>';
+        saveHint.textContent = '저장 시 로컬과 연결된 구글 시트에 동시 기록됩니다.';
+      } else {
+        headerBadge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-[11px] font-semibold';
+        headerBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span><span>로컬 저장 모드</span>';
+        modalBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300';
+        modalBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-500"></span><span>미연동 - 로컬 저장 모드</span>';
+        saveHint.textContent = '현재 로컬 저장 모드입니다. 상단 ⚙️에서 구글 시트를 연동할 수 있습니다.';
+      }
+    }
+
+    document.getElementById('openSettingsBtn').addEventListener('click', () => {
+      document.getElementById('scriptUrlInput').value = scriptUrl;
+      document.getElementById('testResultText').classList.add('hidden');
+      openModal('settingsModal');
+    });
+    document.getElementById('closeSettingsBtn').addEventListener('click', () => closeModal('settingsModal'));
+
+    document.getElementById('saveScriptUrlBtn').addEventListener('click', () => {
+      const val = document.getElementById('scriptUrlInput').value.trim();
+      saveScriptUrl(val);
+      showToast(val ? '구글 시트 URL이 저장되었습니다!' : '연동이 해제되어 로컬 모드로 전환되었습니다.');
+    });
+
+    document.getElementById('testConnectionBtn').addEventListener('click', async () => {
+      const inputUrl = document.getElementById('scriptUrlInput').value.trim();
+      const resultEl = document.getElementById('testResultText');
+      resultEl.classList.remove('hidden', 'text-emerald-400', 'text-rose-400', 'text-sky-300');
+
+      if (!inputUrl) {
+        resultEl.textContent = '먼저 웹 앱 URL을 입력해 주세요.';
+        resultEl.classList.add('text-rose-400');
+        return;
+      }
+
+      resultEl.textContent = '연결 테스트 중...';
+      resultEl.classList.add('text-sky-300');
+
+      try {
+        const res = await fetch(inputUrl, { method: 'GET' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        if (json.status === 'success') {
+          saveScriptUrl(inputUrl);
+          resultEl.textContent = `연결 성공! 현재 시트에 ${Array.isArray(json.data) ? json.data.length : 0}건의 기록이 있습니다.`;
+          resultEl.classList.remove('text-sky-300');
+          resultEl.classList.add('text-emerald-400');
+          showToast('구글 시트 연결 성공!');
+        } else {
+          throw new Error(json.message || '응답 형식 오류');
+        }
+      } catch (err) {
+        resultEl.textContent = '연결 실패: URL과 배포 권한("모든 사용자")을 다시 확인해 주세요.';
+        resultEl.classList.remove('text-sky-300');
+        resultEl.classList.add('text-rose-400');
+      }
+    });
+
+    // Copy Apps Script code via document.execCommand('copy')
+    document.getElementById('copyAppsScriptBtn').addEventListener('click', () => {
+      const box = document.getElementById('appsScriptCodeBox');
+      box.select();
+      box.setSelectionRange(0, 99999);
+      try {
+        document.execCommand('copy');
+        showToast('Apps Script 코드가 복사되었습니다!');
+      } catch (_) {
+        showToast('코드 영역을 직접 선택해 복사해 주세요.', 'info');
+      }
+    });
+
+    /**
+     * =========================================================================
+     * 9. Initial Render
+     * =========================================================================
+     */
+    function renderTodayAll() {
+      renderWarmup();
+      renderExercises();
+      renderCooldownAndFooter();
+      updateProgressUI();
+      updateTimerUI();
+    }
+
+    document.getElementById('appsScriptCodeBox').value = APPS_SCRIPT_TEMPLATE;
+    updateConnectionStatusUI();
+    renderTodayAll();
+    renderHistory();
+  </script>
+</body>
+</html>
