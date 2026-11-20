@@ -1,0 +1,16 @@
+{
+  "name": "중둔근·햄스트링·코어 보강운동",
+  "short_name": "보강운동",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "icon.png?v=2",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
